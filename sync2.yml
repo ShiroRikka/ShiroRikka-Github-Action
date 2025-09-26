@@ -23,8 +23,11 @@ jobs:
         id: sync
         uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
         with:
-          upstream_sync_repo: lobehub/lobe-chat
-          upstream_sync_branch: main
-          target_sync_branch: main
+          # 例如：lobehub/lobe-chat
+          upstream_sync_repo: 
+          # 例如：main
+          upstream_sync_branch: 
+          # 例如：main
+          target_sync_branch: 
           target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
           test_mode: false
