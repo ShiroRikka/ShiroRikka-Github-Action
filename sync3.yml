@@ -3,11 +3,11 @@ name: 'Upstream Sync'
 on:
   schedule:
     - cron:  '0 7 * * 1,4'
-    # scheduled at 07:00 every Monday and Thursday
+    # 安排在每周一和周四的 07:00
 
-  workflow_dispatch:  # click the button on Github repo!
+  workflow_dispatch:  # 在 Github 仓库中点击按钮！
     inputs:
-      sync_test_mode: # Adds a boolean option that appears during manual workflow run for easy test mode config
+      sync_test_mode: # 添加一个布尔值选项，该选项在手动运行工作流时显示，方便配置测试模式。
         description: 'Fork Sync Test Mode'
         type: boolean
         default: false
@@ -18,34 +18,34 @@ jobs:
     name: Sync latest commits from upstream repo
 
     steps:
-    # REQUIRED step
-    # Step 1: run a standard checkout action, provided by github
+    # 必需步骤
+    # 步骤 1：运行由 GitHub 提供的标准签出操作
     - name: Checkout target repo
       uses: actions/checkout@v3
       with:
-        # optional: set the branch to checkout,
-        # sync action checks out your 'target_sync_branch' anyway
+        # 可选：设置要检出的分支，
+        # 同步操作无论如何都会检出您的“target_sync_branch”
         ref:  my-branch
-        # REQUIRED if your upstream repo is private (see wiki)
+        # 如果你的上游代码仓库是私有的，则这是必需的 (详情请参考 wiki)。
         persist-credentials: false
 
-    # REQUIRED step
-    # Step 2: run the sync action
+    # 必需步骤
+    # 步骤 2：运行同步操作
     - name: Sync upstream changes
       id: sync
       uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
       with:
         target_sync_branch: my-branch
-        # REQUIRED 'target_repo_token' exactly like this!
+        # 必需 'target_repo_token' 必须完全如此！
         target_repo_token: ${{ secrets.GITHUB_TOKEN }}
         upstream_sync_branch: main
         upstream_sync_repo: aormsby/Fork-Sync-With-Upstream-action
         upstream_repo_access_token: ${{ secrets.UPSTREAM_REPO_SECRET }}
 
-        # Set test_mode true during manual dispatch to run tests instead of the true action!!
+        # 在手动调度期间设置 test_mode 为 true 以运行测试，而不是执行实际操作！！
         test_mode: ${{ inputs.sync_test_mode }}
       
-    # Step 3: Display a sample message based on the sync output var 'has_new_commits'
+    # 步骤 3：根据同步输出变量“has_new_commits”显示示例消息
     - name: New commits found
       if: steps.sync.outputs.has_new_commits == 'true'
       run: echo "New commits were found to sync."
