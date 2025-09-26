@@ -2,8 +2,8 @@ name: 'Upstream Sync'
 
 on:
   schedule:
-    - cron:  '0 7 * * 1,4'
-    # 安排在每周一和周四的 07:00
+    - cron:  '*/30 * * * *'
+    # 每 30 分钟运行一次
 
   workflow_dispatch:  # 在 Github 仓库中点击按钮！
     inputs:
@@ -21,13 +21,12 @@ jobs:
     # 必需步骤
     # 步骤 1：运行由 GitHub 提供的标准签出操作
     - name: Checkout target repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v5
       with:
         # 可选：设置要检出的分支，
         # 同步操作无论如何都会检出您的“target_sync_branch”
-        ref:  my-branch
-        # 如果你的上游代码仓库是私有的，则这是必需的 (详情请参考 wiki)。
-        persist-credentials: false
+        ############################ 例如：main #######
+        ref: 
 
     # 必需步骤
     # 步骤 2：运行同步操作
@@ -35,12 +34,14 @@ jobs:
       id: sync
       uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
       with:
-        target_sync_branch: my-branch
+        ########################## 例如：main #######
+        target_sync_branch: 
         # 必需 'target_repo_token' 必须完全如此！
         target_repo_token: ${{ secrets.GITHUB_TOKEN }}
-        upstream_sync_branch: main
-        upstream_sync_repo: aormsby/Fork-Sync-With-Upstream-action
-        upstream_repo_access_token: ${{ secrets.UPSTREAM_REPO_SECRET }}
+        ########################## 例如：main #######
+        upstream_sync_branch: 
+        ########################## 例如：aormsby/Fork-Sync-With-Upstream-action #######
+        upstream_sync_repo: 
 
         # 在手动调度期间设置 test_mode 为 true 以运行测试，而不是执行实际操作！！
         test_mode: ${{ inputs.sync_test_mode }}
