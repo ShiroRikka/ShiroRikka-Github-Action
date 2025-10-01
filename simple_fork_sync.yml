@@ -16,3 +16,11 @@ jobs:
           base: main                      # 上游仓库的基础分支
           head: main                      # 你的 fork 仓库的头部分支
           token: ${{ secrets.PERSONAL_TOKEN }} # 必须使用具有 repo/public_repo 权限的 PAT
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 2
